@@ -15,3 +15,7 @@
 * `IAgoraRtcEngine.so`
 * `callBack.py` `MODEL_NAME = 'ssd_mobilenet_v1_coco_2018_01_28'`
 * `demo.py` `appId = b"c7511bc67c6147f4aca0b8cb68e47cb0"`
+
+## Notice
+
+Run on system terminal.
