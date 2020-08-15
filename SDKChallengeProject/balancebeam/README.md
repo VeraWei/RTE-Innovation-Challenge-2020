@@ -21,11 +21,11 @@ This project is belonging to team balance beam
 - 有市场 （cooperation 在线面板）
 
 ## reference
-[Two players](https://ml4a.github.io/demos/tfjs/regression-pong.html)
-[Game](https://castorini.github.io/honkling/view/home.html)
-[Emotion Extractor](https://brendansudol.com/faces/)
-[Face API](https://github.com/justadudewhohacks/face-api.js)
-[AI Assistant](https://aida.dor.ai/demo/)
-[Canvas Panel](https://www.y8.com/games/canvas_friends)
-[Python Electron App](https://medium.com/@abulka/electron-python-4e8c807bfa5e)
-[Pipcook (Alibaba)](https://alibaba.github.io/pipcook/#/zh-cn/)
+- [Two players](https://ml4a.github.io/demos/tfjs/regression-pong.html)
+- [Game](https://castorini.github.io/honkling/view/home.html)
+- [Emotion Extractor](https://brendansudol.com/faces/)
+- [Face API](https://github.com/justadudewhohacks/face-api.js)
+- [AI Assistant](https://aida.dor.ai/demo/)
+- [Canvas Panel](https://www.y8.com/games/canvas_friends)
+- [Python Electron App](https://medium.com/@abulka/electron-python-4e8c807bfa5e)
+- [Pipcook (Alibaba)](https://alibaba.github.io/pipcook/#/zh-cn/)
