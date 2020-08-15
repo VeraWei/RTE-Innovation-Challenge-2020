@@ -19,3 +19,7 @@
 ## Notice
 
 Run on system terminal.
+
+## Electron Demo
+
+https://github.com/AgoraIO-Community/Agora-Electron-Quickstart
