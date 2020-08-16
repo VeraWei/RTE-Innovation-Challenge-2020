@@ -16,9 +16,24 @@ This project is belonging to team balance beam
 参赛作品可以在日常工作生活中产生的商业价值。是否能够引起行业关注和足够的影响力以及创造市场效益。
 
 ## brainstorm
+
+### 标准
 - 有趣 （game）
 - 有用 (公益：人脸识别、语音识别 报警器)
 - 有市场 （cooperation 在线面板）
+
+### 技术性
+- RTM 实时消息 => 多人在线/1v1
+- RTC 实时音视频 => 音频类游戏、直播、视频聊天
+- deeplearning => 语音识别、视频识别
+
+### ideas
+- Games
+  - 在线 tank game
+  - KTV 打分，节奏大师（竞技）
+  - 教育类游戏（竞技）
+- 直播类
+  - 实时人脸识别打分（AI识别 + 打分算法）
 
 ## reference
 - [Two players](https://ml4a.github.io/demos/tfjs/regression-pong.html)
