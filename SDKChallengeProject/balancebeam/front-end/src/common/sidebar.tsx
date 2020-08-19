@@ -1,7 +1,6 @@
 import React from 'react';
 import "../assets/styles.css";
 
-
 class LeftBar extends React.Component {
     render() {
         return (
@@ -112,59 +111,6 @@ class LeftBar extends React.Component {
                                         >
                                             SEND
                                         </button>
-                                    </div>
-                                    <div className="input-field channel-padding">
-                                        <input
-                                            type="text"
-                                            placeholder="query member online status"
-                                            name="memberId"
-                                        />
-                                        <button
-                                            className="btn btn-raised btn-primary waves-effect waves-light custom-btn-pin"
-                                            id="query_peer"
-                                        >
-                                            QUERY
-                                        </button>
-                                    </div>
-                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                                            <span
-                                                style={{fontSize: '20px', marginRight: 10}}
-                                            >
-                                                IMAGE
-                                            </span>
-                                            <div className="agora-image">
-                                                <img
-                                                    src="../assets/agora.jpg"
-                                                    width="200px"
-                                                    height="100px"
-                                                    id="agora-send"
-                                                    alt=""
-                                                />
-                                            </div>
-                                        </div>
-                                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                                            <span
-                                                style={{fontSize: '16px', marginTop: 7}}
-                                            >
-                                                channel
-                                            </span>
-                                            <button
-                                                className="btn btn-raised btn-primary waves-effect waves-light"
-                                                id="send-channel-image"
-                                            >
-                                                SEND
-                                            </button>
-                                            <span style={{fontSize: '16px'}}>
-                                                peer
-                                            </span>
-                                            <button
-                                                className="btn btn-raised btn-primary waves-effect waves-light"
-                                                id="send-image"
-                                            >
-                                                SEND
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

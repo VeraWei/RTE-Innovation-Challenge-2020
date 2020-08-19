@@ -2,7 +2,9 @@ import React from "react";
 
 import Navbar from "./common/navbar";
 import Sidebar from "./common/sidebar";
+import Game from "./components/game";
 import {initialization} from "./util/initialization";
+
 import "./App.css";
 
 class App extends React.Component {
@@ -15,6 +17,7 @@ class App extends React.Component {
             <div className="agora-theme">
                 <Navbar />
                 <Sidebar />
+                {/* <Game /> */}
             </div>
         );
     }

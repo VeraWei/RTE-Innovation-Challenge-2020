@@ -7,7 +7,6 @@ import {
     Toast,
     validator,
     serializeFormData,
-    imageToBlob,
     blobToImage,
 } from "./common";
 
@@ -353,82 +352,5 @@ export function initialization(params) {
                 );
                 console.error(err);
             });
-    });
-
-    $("#query_peer").on("click", function (e) {
-        e.preventDefault();
-        if (!rtm._logined) {
-            Toast.error("Please Login First");
-            return;
-        }
-
-        const params = serializeFormData("loginForm");
-
-        if (!validator(params, ["appId", "accountName", "memberId"])) {
-            return;
-        }
-
-        rtm.queryPeersOnlineStatus(params.memberId)
-            .then((res) => {
-                const view = $("<div/>", {
-                    text:
-                        "memberId: " +
-                        params.memberId +
-                        ", online: " +
-                        res[params.memberId],
-                });
-                $("#log").append(view);
-            })
-            .catch((err) => {
-                Toast.error(
-                    "query peer online status failed, please open console see more details."
-                );
-                console.error(err);
-            });
-    });
-
-    $("#send-image").on("click", async function (e) {
-        e.preventDefault();
-        const params = serializeFormData("loginForm");
-
-        if (!validator(params, ["appId", "accountName", "peerId"])) {
-            return;
-        }
-        const src = $("img").attr("src");
-        imageToBlob(src, (blob) => {
-            rtm.uploadImage(blob, params.peerId);
-        });
-    });
-
-    $("#send-channel-image").on("click", async function (e) {
-        e.preventDefault();
-        const params = serializeFormData("loginForm");
-
-        if (!validator(params, ["appId", "accountName", "channelName"])) {
-            return;
-        }
-        const src = $("img").attr("src");
-        imageToBlob(src, (blob) => {
-            rtm.sendChannelMediaMessage(blob, params.channelName)
-                .then(() => {
-                    const view = $("<div/>", {
-                        text:
-                            "account: " +
-                            rtm.accountName +
-                            " channel: " +
-                            params.channelName,
-                    });
-                    $("#log").append(view);
-                    $("#log").append(`<img src= '${src}'/>`);
-                })
-                .catch((err) => {
-                    Toast.error(
-                        "Send message to channel " +
-                            params.channelName +
-                            " failed, please open console see more details."
-                    );
-                    console.error(err);
-                });
-        });
     });
 }
