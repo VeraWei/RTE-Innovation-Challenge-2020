@@ -10,6 +10,8 @@ import {
     blobToImage,
 } from "./common";
 
+import ACTIONS from "../actions";
+
 export function initialization(params) {
     M.AutoInit();
 
@@ -111,6 +113,7 @@ export function initialization(params) {
                 ", memberId: ",
                 memberId
             );
+
             const view = $("<div/>", {
                 text: [
                     "event: ChannelMessage ",
@@ -300,6 +303,10 @@ export function initialization(params) {
                         params.channelName,
                 });
                 $("#log").append(view);
+
+                if (Object.keys(ACTIONS).indexOf(params.channelMessage) >=0) {
+                    // $('#targetA')
+                }
             })
             .catch((err) => {
                 Toast.error(
