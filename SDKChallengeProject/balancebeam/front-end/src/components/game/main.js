@@ -503,7 +503,6 @@ export const initGame = () => {
         };
     };
     
-    debugger
     game.state.add("boot", game.States.boot);
     game.state.add("preload", game.States.preload);
     game.state.add("main", game.States.main);

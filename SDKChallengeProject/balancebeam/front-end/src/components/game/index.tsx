@@ -4,7 +4,8 @@ import "./index.css";
 
 class Game extends React.Component {
     componentDidMount() {
-        // initGame();
+        initGame();
+
     }
 
     render() {
