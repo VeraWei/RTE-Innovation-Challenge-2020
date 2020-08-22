@@ -18,14 +18,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react"
-    },
-    "include": [
-        "src"
-    ],
-    "typeRoots": [
-        "./node_modules/phaser/types"
-    ],
-    "types": [
-        "Phaser"
-    ]
+  },
+  "include": [
+    "src"
+  ],
+  "typeRoots": [
+    "./node_modules/phaser/types"
+  ],
+  "types": [
+    "Phaser"
+  ]
 }

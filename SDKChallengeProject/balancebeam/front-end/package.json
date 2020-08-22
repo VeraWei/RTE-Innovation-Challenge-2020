@@ -16,7 +16,7 @@
         "identicon.js": "^2.3.3",
         "jquery": "^3.5.1",
         "materialize-css": "^1.0.0",
-        "phaser": "^3.24.1",
+        "phaser": "^3.0.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-scripts": "3.4.3",

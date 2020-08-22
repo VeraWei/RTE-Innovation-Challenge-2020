@@ -1,7 +1,8 @@
 import React from 'react';
 import "../../assets/styles.css";
 import LoginForm from '../login';
-import Content from '../content';
+import Game from '../game';
+// import Content from '../content';
 
 class MainComponent extends React.Component {
     render() {
@@ -9,7 +10,8 @@ class MainComponent extends React.Component {
             <div className="row col l12 s12">
                 <div className="row container col l12 s12 main-container">
                     <LoginForm />
-                    <Content />
+                    <Game />
+                    {/* <Content /> */}
                 </div>
             </div>
         );

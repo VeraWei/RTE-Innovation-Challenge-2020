@@ -1,513 +1,237 @@
 import * as Phaser from "phaser";
-import { Swipe } from "./phaser_swipe";
+//ver 1.2
+var game;
+var gameOptions = {
 
-export const initGame = () => {
-    let game = new Phaser.Game(240, 400, Phaser.CANVAS, "game");
-    game.States = {};
-    
-    game.States.boot = function () {
-        this.preload = function () {
-            // if (typeof GAME !== "undefined") {
-            //     this.load.baseURL = GAME + "/";
-            // }
-            if (!game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-                this.scale.forcePortrait = true;
-                this.scale.refresh();
-            }
-            game.load.image("loading", "assets/preloader.gif");
-        };
-        this.create = function () {
-            game.state.start("preload");
-        };
-    };
-    
-    game.States.preload = function () {
-        this.preload = function () {
-            let preloadSprite = game.add.sprite(10, game.height / 2, "loading");
-            game.load.setPreloadSprite(preloadSprite);
-            game.load.image("background", "assets/bg.png");
-            game.load.image("btnStart", "assets/btn-start.png");
-            game.load.image("btnRestart", "assets/btn-restart.png");
-            game.load.image("logo", "assets/logo.png");
-            game.load.image("btnTryagain", "assets/btn-tryagain.png");
-        };
-        this.create = function () {
-            game.state.start("main");
-        };
-    };
-    
-    game.States.main = function () {
-        this.create = function () {
-            // 背景
-            game.add.tileSprite(0, 0, game.width, game.height, "background");
-            // logo
-            let logo = game.add.image(0, 0, "logo");
-            logo.reset(
-                (game.width - logo.width) / 2,
-                (game.height - logo.height) / 2 - 50
-            );
-            let startBtn = game.add.button(0, 0, "btnStart", this.startGame, this);
-            startBtn.reset(
-                (game.width - startBtn.width) / 2,
-                (game.height - startBtn.height) / 2 + 100
-            );
-        };
-        this.startGame = function () {
-            game.state.start("start");
-        };
-    };
-    
-    game.States.start = function () {
-        this.create = function () {
-            // 背景
-            game.add.tileSprite(0, 0, game.width, game.height, "background");
-            this.score = 0;
-            this.best = 0;
-            let titleStyle = {
-                font: "bold 12px Arial",
-                fill: "#4DB3B3",
-                boundsAlignH: "center",
-            };
-            let scoreStyle = {
-                font: "bold 20px Arial",
-                fill: "#FFFFFF",
-                boundsAlignH: "center",
-            };
-            //score
-            let scoreSprite = game.add.sprite(10, 10);
-            let scoreGraphics = game.add.graphics(0, 0);
-            scoreGraphics.lineStyle(5, 0xa1c5c5);
-            scoreGraphics.beginFill(0x308c8c);
-            scoreGraphics.drawRoundedRect(0, 0, 70, 50, 10);
-            scoreGraphics.endFill();
-            scoreSprite.addChild(scoreGraphics);
-            let scoreTitle = game.add.text(0, 5, "SCORE", titleStyle);
-            scoreTitle.setTextBounds(0, 0, 70, 50);
-            scoreSprite.addChild(scoreTitle);
-            this.scoreText = game.add.text(0, 20, this.score, scoreStyle);
-            this.scoreText.setTextBounds(0, 0, 70, 50);
-            scoreSprite.addChild(this.scoreText);
-            //best
-            let bestSprite = game.add.sprite(90, 10);
-            let bestGraphics = game.add.graphics(0, 0);
-            bestGraphics.lineStyle(5, 0xa1c5c5);
-            bestGraphics.beginFill(0x308c8c);
-            bestGraphics.drawRoundedRect(0, 0, 70, 50, 10);
-            bestGraphics.endFill();
-            bestSprite.addChild(bestGraphics);
-            let bestTitle = game.add.text(0, 5, "BEST", titleStyle);
-            bestTitle.setTextBounds(0, 0, 70, 50);
-            bestSprite.addChild(bestTitle);
-            this.bestText = game.add.text(0, 20, this.best, scoreStyle);
-            this.bestText.setTextBounds(0, 0, 70, 50);
-            bestSprite.addChild(this.bestText);
-            // rerun
-            let restartBtn = game.add.button(
-                180,
-                15,
-                "btnRestart",
-                this.rerunGame,
-                this
-            );
-            // mainarea
-            let mainAreaSprite = game.add.sprite(10, 80);
-            let mainAreaBackGraphics = game.add.graphics(0, 0);
-            mainAreaBackGraphics.beginFill(0xada79a, 0.5);
-            mainAreaBackGraphics.drawRoundedRect(0, 0, 220, 220, 10);
-            mainAreaBackGraphics.endFill();
-            mainAreaSprite.addChild(mainAreaBackGraphics);
-            // add swipe check
-            this.swipe = new Swipe(this.game, this.swipeCheck);
-            // 定义一组color
-            this.colors = {
-                2: 0x49b4b4,
-                4: 0x4db574,
-                8: 0x78b450,
-                16: 0xc4c362,
-                32: 0xcea346,
-                64: 0xdd8758,
-                128: 0xbf71b3,
-                256: 0x9f71bf,
-                512: 0x7183bf,
-                1024: 0x71bfaf,
-                2048: 0xff7c80,
-            };
-            // 初始化
-            this.rerunGame();
-        };
-        this.update = function () {
-            if (this.canSwipe) {
-                this.swipe.check();
-            }
-        };
-        // 重来
-        this.rerunGame = function () {
-            this.score = 0;
-            this.scoreText.text = this.score;
-            if (this.array) {
-                for (let i = 0; i < 4; i++) {
-                    for (let j = 0; j < 4; j++) {
-                        if (this.array[i][j].sprite) {
-                            this.array[i][j].sprite.kill();
-                        }
-                    }
-                }
-            }
-            // 4x4 array
-            this.array = [];
-            for (let i = 0; i < 4; i++) {
-                this.array[i] = [];
-                for (let j = 0; j < 4; j++) {
-                    this.array[i][j] = {};
-                    this.array[i][j].value = 0;
-                    this.array[i][j].x = i;
-                    this.array[i][j].y = j;
-                }
-            }
-            // 是否响应swipe
-            this.canSwipe = true;
-            // start game
-            this.generateSquare();
-        };
-        // 坐标转换
-        this.transX = function (x) {
-            return 10 + 8 * (x + 1) + x * 45 + 45 / 2;
-        };
-        this.transY = function (y) {
-            return 80 + 8 * (y + 1) + y * 45 + 45 / 2;
-        };
-        // 随机产生一个方块
-        this.generateSquare = function () {
-            let x = Math.floor(Math.random() * 4);
-            let y = Math.floor(Math.random() * 4);
-            while (this.array[x][y].value != 0) {
-                x = Math.floor(Math.random() * 4);
-                y = Math.floor(Math.random() * 4);
-            }
-            let value = 2;
-            if (Math.random() > 0.5) {
-                value = 4;
-            }
-            this.placeSquare(x, y, value);
-        };
-        // 在x,y位置放置一个值为value的方块
-        this.placeSquare = function (x, y, value) {
-            let squareStyle = {
-                font: "bold 20px Arial",
-                fill: "#FFFFFF",
-                boundsAlignH: "center",
-                boundsAlignV: "middle",
-            };
-            let square = game.add.sprite();
-            square.reset(this.transX(x), this.transY(y));
-            let squareBackground = game.add.graphics(-45 / 2, -45 / 2);
-            squareBackground.beginFill(this.colors[value]);
-            squareBackground.drawRoundedRect(0, 0, 45, 45, 5);
-            squareBackground.endFill();
-            square.addChild(squareBackground);
-            let squareText = game.add.text(-45 / 2, -45 / 2, value, squareStyle);
-            squareText.setTextBounds(0, 0, 45, 45);
-            square.addChild(squareText);
-            this.array[x][y].value = value;
-            this.array[x][y].sprite = square;
-            square.anchor.setTo(0.5, 0.5);
-            square.scale.setTo(0.0, 0.0);
-            let tween = game.add
-                .tween(square.scale)
-                .to({ x: 1.0, y: 1.0 }, 100, Phaser.Easing.Sinusoidal.InOut, true);
-            tween.onComplete.add(function () {
-                if (this.checkGameover()) {
-                    this.gameOver();
-                }
-            }, this);
-        };
-        // swipe的公共逻辑抽出
-        this.swipeCommon = function (
-            i,
-            j,
-            arrNode,
-            posJson,
-            condition,
-            nextArrNode,
-            nextPosJson
-        ) {
-            let that = this;
-            let duration = 100;
-            // 遇到了可以合并的
-            if (!arrNode.newNode && arrNode.value == this.array[i][j].value) {
-                arrNode.value = arrNode.value * 2;
-                arrNode.newNode = true;
-                this.array[i][j].value = 0;
-                this.score = this.score + arrNode.value;
-                this.scoreText.text = this.score;
-                if (this.score > this.best) {
-                    this.best = this.score;
-                    this.bestText.text = this.best;
-                }
-                // 渐渐透明后被kill掉
-                let t1 = game.add
-                    .tween(arrNode.sprite)
-                    .to({ alpha: 0 }, duration, Phaser.Easing.Linear.None, true);
-                t1.onComplete.add(function () {
-                    this.sprite.kill();
-                    that.placeSquare(this.x, this.y, this.value);
-                    if (!that.canSwipe) {
-                        that.canSwipe = true;
-                        that.generateSquare();
-                    }
-                }, arrNode);
-                let t2 = game.add
-                    .tween(this.array[i][j].sprite)
-                    .to({ alpha: 0 }, duration, Phaser.Easing.Linear.None, true);
-                t2.onComplete.add(function () {
-                    this.kill();
-                    if (!that.canSwipe) {
-                        that.canSwipe = true;
-                        that.generateSquare();
-                    }
-                }, this.array[i][j].sprite);
-                game.add
-                    .tween(this.array[i][j].sprite)
-                    .to(posJson, duration, Phaser.Easing.Linear.None, true);
-                arrNode.sprite = this.array[i][j].sprite;
-                this.array[i][j].sprite = undefined;
-            } else if (arrNode.value == 0) {
-                arrNode.value = this.array[i][j].value;
-                this.array[i][j].value = 0;
-                let t = game.add
-                    .tween(this.array[i][j].sprite)
-                    .to(posJson, duration, Phaser.Easing.Linear.None, true);
-                t.onComplete.add(function () {
-                    if (!that.canSwipe) {
-                        that.canSwipe = true;
-                        that.generateSquare();
-                    }
-                });
-                arrNode.sprite = this.array[i][j].sprite;
-                this.array[i][j].sprite = undefined;
-            } else if (condition) {
-                nextArrNode.value = this.array[i][j].value;
-                this.array[i][j].value = 0;
-                let t = game.add
-                    .tween(this.array[i][j].sprite)
-                    .to(nextPosJson, duration, Phaser.Easing.Linear.None, true);
-                t.onComplete.add(function () {
-                    if (!that.canSwipe) {
-                        that.canSwipe = true;
-                        that.generateSquare();
-                    }
-                });
-                nextArrNode.sprite = this.array[i][j].sprite;
-                this.array[i][j].sprite = undefined;
-            }
-        };
-        // swipe的初始逻辑抽出
-        this.swipeInit = function () {
-            this.canSwipe = false;
-            game.time.events.add(
-                Phaser.Timer.SECOND * 0.5,
-                function () {
-                    if (!this.canSwipe) {
-                        this.canSwipe = true;
-                    }
-                },
-                this
-            );
-        };
-        // swipe的结尾逻辑抽出
-        this.swipeDone = function () {
-            for (let i = 0; i < this.array.length; i++) {
-                for (let j = 0; j < this.array.length; j++) {
-                    this.array[i][j].newNode = undefined;
-                }
-            }
-        };
-        this.swipeLeft = function () {
-            this.swipeInit();
-            for (let i = 1; i < this.array.length; i++) {
-                for (let j = 0; j < this.array.length; j++) {
-                    if (this.array[i][j].value != 0) {
-                        let index = i - 1;
-                        while (index > 0 && this.array[index][j].value == 0) {
-                            index--;
-                        }
-                        this.swipeCommon(
-                            i,
-                            j,
-                            this.array[index][j],
-                            { x: this.transX(index), y: this.transY(j) },
-                            index + 1 != i,
-                            this.array[index + 1][j],
-                            { x: this.transX(index + 1), y: this.transY(j) }
-                        );
-                    }
-                }
-            }
-            this.swipeDone();
-        };
-        this.swipeUp = function () {
-            this.swipeInit();
-            for (let i = 0; i < this.array.length; i++) {
-                for (let j = 1; j < this.array.length; j++) {
-                    if (this.array[i][j].value != 0) {
-                        let index = j - 1;
-                        while (index > 0 && this.array[i][index].value == 0) {
-                            index--;
-                        }
-                        this.swipeCommon(
-                            i,
-                            j,
-                            this.array[i][index],
-                            { x: this.transX(i), y: this.transY(index) },
-                            index + 1 != j,
-                            this.array[i][index + 1],
-                            { x: this.transX(i), y: this.transY(index + 1) }
-                        );
-                    }
-                }
-            }
-            this.swipeDone();
-        };
-        this.swipeRight = function () {
-            this.swipeInit();
-            for (let i = this.array.length - 2; i >= 0; i--) {
-                for (let j = 0; j < this.array.length; j++) {
-                    if (this.array[i][j].value != 0) {
-                        let index = i + 1;
-                        while (
-                            index < this.array.length - 1 &&
-                            this.array[index][j].value == 0
-                        ) {
-                            index++;
-                        }
-                        this.swipeCommon(
-                            i,
-                            j,
-                            this.array[index][j],
-                            { x: this.transX(index), y: this.transY(j) },
-                            index - 1 != i,
-                            this.array[index - 1][j],
-                            { x: this.transX(index - 1), y: this.transY(j) }
-                        );
-                    }
-                }
-            }
-            this.swipeDone();
-        };
-        this.swipeDown = function () {
-            this.swipeInit();
-            for (let i = 0; i < this.array.length; i++) {
-                for (let j = this.array.length - 2; j >= 0; j--) {
-                    if (this.array[i][j].value != 0) {
-                        let index = j + 1;
-                        while (
-                            index < this.array.length - 1 &&
-                            this.array[i][index].value == 0
-                        ) {
-                            index++;
-                        }
-                        this.swipeCommon(
-                            i,
-                            j,
-                            this.array[i][index],
-                            { x: this.transX(i), y: this.transY(index) },
-                            index - 1 != j,
-                            this.array[i][index - 1],
-                            { x: this.transX(i), y: this.transY(index - 1) }
-                        );
-                    }
-                }
-            }
-            this.swipeDone();
-        };
-        // swipe检测
-        this.swipeCheck = {
-            up: this.swipeUp.bind(this),
-            down: this.swipeDown.bind(this),
-            left: this.swipeLeft.bind(this),
-            right: this.swipeRight.bind(this),
-        };
-        // 检测是否游戏结束
-        this.checkGameover = function () {
-            // 如果16个格子没满，return false
-            for (let i = 0; i < this.array.length; i++) {
-                for (let j = 0; j < this.array.length; j++) {
-                    if (this.array[i][j].value == 0) {
-                        return false;
-                    }
-                }
-            }
-            // 如果16个格子和周围格子有相同的值的，return false
-            let d = [
-                { dx: -1, dy: 0 },
-                { dx: 1, dy: 0 },
-                { dx: 0, dy: -1 },
-                { dx: 0, dy: 1 },
-            ];
-            for (let i = 0; i < this.array.length; i++) {
-                for (let j = 0; j < this.array.length; j++) {
-                    for (let k = 0; k < d.length; k++) {
-                        if (
-                            i + d[k].dx >= 0 &&
-                            i + d[k].dx < this.array.length &&
-                            j + d[k].dy >= 0 &&
-                            j + d[k].dy < this.array.length &&
-                            this.array[i][j].value ==
-                                this.array[i + d[k].dx][j + d[k].dy].value
-                        ) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        };
-        // 游戏结束
-        this.gameOver = function () {
-            if (!this.gameOverMask) {
-                this.gameOverMask = game.add.sprite(0, 0);
-                let mask = game.add.graphics(0, 0);
-                mask.beginFill(0x000000, 0.5);
-                mask.drawRect(0, 0, game.width, game.height);
-                mask.endFill();
-                this.gameOverMask.addChild(mask);
-                let gameOverTextStyle = {
-                    font: "bold 35px Arial",
-                    fill: "#FFFFFF",
-                    boundsAlignH: "center",
-                };
-                let gameOverText = game.add.text(
-                    0,
-                    100,
-                    "Game Over",
-                    gameOverTextStyle
-                );
-                gameOverText.setTextBounds(0, 0, game.width, game.height);
-                this.gameOverMask.addChild(gameOverText);
-                let gameOverBtn = game.add.button(
-                    (game.width - 206) / 2,
-                    200,
-                    "btnTryagain",
-                    this.tryAgain,
-                    this
-                );
-                this.gameOverMask.addChild(gameOverBtn);
-            }
-        };
-        // try again
-        this.tryAgain = function () {
-            this.gameOverMask.kill();
-            this.gameOverMask = undefined;
-            this.rerunGame();
-        };
-    };
-    
-    game.state.add("boot", game.States.boot);
-    game.state.add("preload", game.States.preload);
-    game.state.add("main", game.States.main);
-    game.state.add("start", game.States.start);
-    
-    game.state.start("boot");
+	// 设置旋转速度，即每一帧转动的角度
+	rotationSpeed: 3, 
+	// 刀飞出去的速度, 即一秒中内移动像素
+	throwSpeed: 150,
+	//v1.1新增 两把刀之前的最小角度(约束角度)
+	minAngle: 15,
 
+    //v1.2新增 最大转动的变化量，即每一帧上限
+    rotationVariation: 2,
+    //v1.2新增 下一秒的变化速度
+    changeTime: 2000,
+    //v1.2新增 最大旋转速度
+    maxRotationSpeed: 6
 }
+
+// 窗口第一次加载...
+export function initGame(){
+	// 游戏的参数设置
+	var gameConfig={
+		type: Phaser.CANVAS,
+		width: 750,
+		height: 1334,
+		backgroundColor: 0x444444,
+    scene: [playGame],
+    canvas: document.getElementById('gameCanvas'),
+  };
+	game = new Phaser.Game(gameConfig);
+	window.focus();//获得窗口焦点
+	resize();//调整窗口
+	window.addEventListener("resize",resize,false);
+}
+class playGame extends Phaser.Scene{
+
+	constructor(){
+		super("playGame");
+	}
+	// 预加载
+	preload(){
+
+		// 加载各种资源
+		this.load.image("target","https://raw.githubusercontent.com/channingbreeze/games/master/knifehit3/assets/target.png");
+		this.load.image("knife","https://raw.githubusercontent.com/channingbreeze/games/master/knifehit3/assets/knife.png");
+
+	}
+	// 游戏开始运行
+	create(){
+		 //v1.2 在游戏一开始设置转动的速度与一致，即默认值
+        this.currentRotationSpeed = gameOptions.rotationSpeed;
+        this.newRotationSpeed = gameOptions.rotationSpeed;
+
+		// 在游戏开始时设置可以扔刀
+		this.canThrow = true;
+
+		// 将旋转的刀组成一个组
+		this.knifeGroup=this.add.group();
+
+
+		// 加载刀和圆木
+		this.knife = this.add.sprite(game.config.width/2, game.config.height/5*4,"knife");
+		this.target = this.add.sprite(game.config.width/2,400,"target");
+
+ 		// 将圆木放在第一层,即最上层
+		this.target.depth = 1;
+
+		// 点击后飞出刀
+		this.input.on("pointerdown", this.throwKnife, this);
+
+        //v1.2 创建循环的时间事件
+        var timedEvent = this.time.addEvent({
+            delay: gameOptions.changeTime,
+            callback: this.changeSpeed,
+            callbackScope: this,
+            loop: true
+        });
+	}
+
+	//v1.2 圆木的旋转速度
+    changeSpeed(){
+
+        //v1.2 产生一个随机旋转方向，即+1或-1
+        var sign = Phaser.Math.Between(0, 1) == 0 ? -1 : 1;
+
+        //v1.2 产生一个随机数据范围在[-游戏设置变量，游戏设置变量]
+        var variation = Phaser.Math.FloatBetween(-gameOptions.rotationVariation, gameOptions.rotationVariation);
+
+        //v1.2 产生一个新的旋转的速度
+        this.newRotationSpeed = (this.currentRotationSpeed + variation) * sign;
+
+        //v1.2 设置一个新的限制速度
+        this.newRotationSpeed = Phaser.Math.Clamp(this.newRotationSpeed, -gameOptions.maxRotationSpeed, gameOptions.maxRotationSpeed);
+    }
+
+	// 飞出刀动作
+	throwKnife(){
+
+		// 检查是否要飞出
+		if(this.canThrow){
+			
+			this.canThrow = false;
+
+			// 飞刀的补间动画
+			this.tweens.add({
+				// 刀
+				targets:[this.knife],
+				// 到达的位置
+				y: this.target.y+this.target.width/2,
+
+				 // 补间速度
+				duration: gameOptions.throwSpeed,
+
+				// 回传范围
+				callbackScope: this,
+
+				 // 执行后的回调函数
+				onComplete: function(tween){
+
+					//v1.1 新增 合法飞出参数
+					var legalHit = true;
+					//v1.1 新增 已经在圆木上刀成员
+					var children = this.knifeGroup.getChildren();
+					//v1.1 对于在圆木上的每一把刀设置约束角度
+                    for (var i=0; i<children.length; i++){
+ 
+                        //v1.1 判断当前飞刀与圆木上的刀是否在约束范围之内
+                        if(Math.abs(Phaser.Math.Angle.ShortestBetween(this.target.angle, children[i].impactAngle)) < gameOptions.minAngle){
+ 
+                            //v1.1 确定标记参数
+                            legalHit = false;
+ 
+                            //v1.1 一旦在约束范围内就停止
+                            break;
+                        }
+                    }
+                    // 原来合法飞出
+                    if(legalHit){
+
+						// 玩家现可以再次扔刀
+						this.canThrow= true;
+
+						// 将飞出的刀插在圆木上
+						var knife = this.add.sprite(this.knife.x, this.knife.y, "knife");
+						//v1.1 飞刀的约束角度等于目标的角度
+                        knife.impactAngle = this.target.angle;
+                        // 将飞刀绑定在飞刀组中
+						this.knifeGroup.add(knife);
+
+						// 确定相对位置
+						this.knife.y = game.config.height/5*4;
+					}
+					else
+					{
+						//v1.1 增加飞刀掉落动画
+                        this.tweens.add({
+ 
+                            //v1.1 目标
+                            targets: [this.knife],
+ 
+                            y: game.config.height + this.knife.height,
+ 
+                            //v1.1 旋转角度
+                            rotation: 5,
+
+                            //v1.1 补间速度 
+                            duration: gameOptions.throwSpeed * 4,
+ 
+                            //v1.1 回传范围
+                            callbackScope: this,
+ 
+                            //v1.1 结束后的回调函数
+                            onComplete: function(tween){
+ 
+                                //v1.1 重新开始游戏
+                                this.scene.start("playGame")
+                            }
+                        });
+					}
+				}
+
+			});
+		}
+
+	}
+
+	// 游戏每一帧执行 v1.2 增加两个参数
+	//update(){
+	update(time, delta){
+
+
+		//v1.2 修改 使目标转动起来
+		//this.target.angle += gameOptions.rotationSpeed;
+		this.target.angle += this.currentRotationSpeed;
+
+		// 获取旋转的刀成员
+		var children = this.knifeGroup.getChildren();
+
+		// 对于刀的每个成员
+		for (var i=0; i<children.length; i++){
+
+			//v1.2 修改 刀旋转的速度设置与当前速度一致
+			//children[i].angle += gameOptions.rotationSpeed;
+			children[i].angle += this.currentRotationSpeed;
+
+			 // 将角度转化为弧度
+			var radians = Phaser.Math.DegToRad(children[i].angle + 90);
+
+			// 再用弧度转化为相应刀的坐标
+			children[i].x = this.target.x + (this.target.width/2)*Math.cos(radians);
+            children[i].y = this.target.y + (this.target.width/2)*Math.sin(radians);
+		}
+		//v1.2 调整旋转角度用线性插值表示
+        this.currentRotationSpeed = Phaser.Math.Linear(this.currentRotationSpeed, this.newRotationSpeed, delta / 1000);
+
+	}
+}
+
+
+// 按比例调整窗口
+function resize() {
+    var canvas = document.querySelector("#gameCanvas");
+    var windowWidth = window.innerWidth;
+    var windowHeight = window.innerHeight;
+    var windowRatio = windowWidth / windowHeight;
+    var gameRatio = game.config.width / game.config.height;
+    if(windowRatio < gameRatio){
+        canvas.style.width = windowWidth + "px";
+        canvas.style.height = (windowWidth / gameRatio) + "px";
+    }
+    else{
+        canvas.style.width = (windowHeight * gameRatio) + "px";
+        canvas.style.height = windowHeight + "px";
+    }
+} 

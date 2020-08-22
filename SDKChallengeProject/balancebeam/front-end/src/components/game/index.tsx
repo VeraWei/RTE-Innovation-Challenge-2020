@@ -4,14 +4,15 @@ import "./index.css";
 
 class Game extends React.Component {
     componentDidMount() {
-        initGame();
-
+      initGame();
     }
 
     render() {
         return (
             <div className="game-container">
-                <div id="game" className="game"></div>
+                <div className="game">
+                  <canvas id="gameCanvas" />
+                </div>
             </div>
         );
     }
