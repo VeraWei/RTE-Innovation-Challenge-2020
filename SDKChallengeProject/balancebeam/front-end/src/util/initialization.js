@@ -10,7 +10,7 @@ import {
     blobToImage,
 } from "./common";
 
-import ACTIONS from "../actions";
+import {ACTIONS} from "../actions";
 
 export function initialization(params) {
     M.AutoInit();
@@ -304,8 +304,9 @@ export function initialization(params) {
                 });
                 $("#log").append(view);
 
+                debugger
                 if (Object.keys(ACTIONS).indexOf(params.channelMessage) >=0) {
-                    // $('#targetA')
+                    $('#targetA').css('transform', 'translate3d(20, 0, 0)');
                 }
             })
             .catch((err) => {
@@ -350,6 +351,9 @@ export function initialization(params) {
                         params.peerId,
                 });
                 $("#log").append(view);
+                if (Object.keys(ACTIONS).indexOf(params.channelMessage) >=0) {
+                    $('#targetB').css('transform', 'translate3d(40, 0, 0)');
+                }
             })
             .catch((err) => {
                 Toast.error(

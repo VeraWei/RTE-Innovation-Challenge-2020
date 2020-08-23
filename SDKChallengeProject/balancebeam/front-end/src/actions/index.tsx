@@ -1,4 +1,4 @@
-export default {
+export const ACTIONS = {
     UP: 0,
     RIGHT: 1,
     DOWN: 2,
