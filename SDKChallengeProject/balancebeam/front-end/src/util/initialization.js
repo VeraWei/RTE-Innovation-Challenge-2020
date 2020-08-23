@@ -304,7 +304,6 @@ export function initialization(params) {
                 });
                 $("#log").append(view);
 
-                debugger
                 if (Object.keys(ACTIONS).indexOf(params.channelMessage) >=0) {
                     $('#targetA').css('transform', 'translate3d(20, 0, 0)');
                 }
