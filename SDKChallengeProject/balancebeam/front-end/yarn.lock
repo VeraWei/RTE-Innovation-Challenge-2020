@@ -4358,9 +4358,9 @@ etag@~1.8.1:
   resolved "https://registry.npm.taobao.org/etag/download/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eventemitter3@^4.0.0, eventemitter3@^4.0.4:
+eventemitter3@^4.0.0, eventemitter3@^4.0.4, eventemitter3@^4.0.5:
   version "4.0.5"
-  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.5.tgz?cache=0&sync_timestamp=1598086408947&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter3%2Fdownload%2Feventemitter3-4.0.5.tgz#51d81e4f1ccc8311a04f0c20121ea824377ea6d9"
+  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.5.tgz?cache=0&sync_timestamp=1598086382431&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter3%2Fdownload%2Feventemitter3-4.0.5.tgz#51d81e4f1ccc8311a04f0c20121ea824377ea6d9"
   integrity sha1-UdgeTxzMgxGgTwwgEh6oJDd+ptk=
 
 events@^3.0.0:

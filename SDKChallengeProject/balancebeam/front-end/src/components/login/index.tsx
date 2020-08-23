@@ -19,6 +19,7 @@ class LoginForm extends React.Component {
                                     type="text"
                                     placeholder="App ID"
                                     name="appId"
+                                    value="c7511bc67c6147f4aca0b8cb68e47cb0"
                                 />
                             </div>
                             <div className="input-field">

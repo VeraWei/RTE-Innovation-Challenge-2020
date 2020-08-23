@@ -10,7 +10,7 @@ class MainComponent extends React.Component {
             <div className="row col l12 s12">
                 <div className="row container col l12 s12 main-container">
                     <LoginForm />
-                    <Game />
+                    {/* <Game /> */}
                     <Content />
                 </div>
             </div>
